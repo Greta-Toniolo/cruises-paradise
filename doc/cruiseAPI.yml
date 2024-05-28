@@ -1,0 +1,666 @@
+-openapi: '3.0.2'
+info:
+  title: Cruise API
+  version: '1.0'
+  description: |
+    API for managing cruises, ships, clients, and routes in a cruise application.
+servers:
+  - url: https://api.servercruises/v1
+  
+tags:
+  - name: Cruise
+    description: Operations to menage cruises data.
+  - name: Boat
+    description: Operations to menage boats data.
+  - name: Client
+    description: Operations to menage clients data.
+  - name: Route 
+    description: Operations to menage routes data.
+  - name: Reservation
+    description: Operations to menage reservations data.
+  - name: AccountClient
+    description: Operations to menage accounts data.
+      
+paths:
+  /getcruises:
+    get:
+      tags: 
+      - Cruise
+      summary: Retrieve a list of cruises.
+      responses:
+        '200':
+          description: A JSON array of cruise objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Crociera'
+  /createcruise:
+    post:
+      tags: 
+      - Cruise  
+      summary: Create a new cruise.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Crociera'
+      responses:
+        '201':
+          description: The cruise has been created successfully.
+          content:
+            application/json:
+              schema:
+                type: string
+  /getcruises/{localita}:
+    parameters:
+      - name: localita
+        in: path
+        description: The locality for which to retrieve cruises.
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+    get:
+      tags: 
+      - Cruise
+      summary: Retrieve a list of cruises by locality.
+      responses:
+        '200':
+          description: A JSON array of cruise objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Crociera'
+  /delcruises/{cruiseId}:
+    delete:
+      tags: 
+      - Cruise
+      summary: Delete a cruise by ID.
+      parameters:
+        - name: cruiseId
+          in: path
+          description: ID of the cruise to be deleted.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: The cruise has been deleted successfully.
+  /updatecruise/{cruiseId}:
+    put:
+      tags: 
+      - Cruise
+      summary: Update a cruise by ID.
+      parameters:
+        - name: cruiseId
+          in: path
+          description: ID of the cruise to be updated.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Crociera'
+      responses:
+        '200':
+          description: The cruise has been updated successfully.
+  /getnave:
+    get:
+      tags: 
+      - Boat
+      summary: Retrieve a list of ships.
+      responses:
+        '200':
+          description: A JSON array of ship objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Boat'
+  /createnave:
+    post:
+      tags: 
+      - Boat
+      summary: Create a new ship.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Boat'
+      responses:
+        '201':
+          description: The ship has been created successfully.
+          content:
+            application/json:
+              schema:
+                type: string
+  /getnave/{naveId}:
+    parameters:
+      - name: naveId
+        in: path
+        description: ID of the ship to retrieve.
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+    get:
+      tags: 
+      - Boat
+      summary: Retrieve a ship by ID.
+      responses:
+        '200':
+          description: A JSON array containing the ship object.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Boat'
+  /delnave/{naveId}:
+    delete:
+      tags: 
+      - Boat
+      summary: Delete a ship by ID.
+      parameters:
+        - name: naveId
+          in: path
+          description: ID of the ship to be deleted.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: The ship has been deleted successfully.
+  /updatenave/{naveId}:
+    put:
+      tags: 
+      - Boat
+      summary: Update a ship by ID.
+      parameters:
+        - name: naveId
+          in: path
+          description: ID of the ship to be updated.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Boat'
+      responses:
+        '200':
+          description: The ship has been updated successfully.
+  /getcliente:
+    get:
+      tags: 
+      - Client
+      summary: Retrieve a list of clients.
+      responses:
+        '200':
+          description: A JSON array of client objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+  /createcliente:
+    post:
+      tags: 
+      - Client
+      summary: Create a new client.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '201':
+          description: The client has been created successfully.
+          content:
+            application/json:
+              schema:
+                type: string
+  /getcliente/{cfcliente}:
+    parameters:
+      - name: cfcliente
+        in: path
+        description: CF (Codice Fiscale) of the client to retrieve.
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+    get:
+      tags: 
+      - Client
+      summary: Retrieve a client by CF.
+      responses:
+        '200':
+          description: A JSON array containing the client object.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Client'
+  /delcliente/{cfcliente}:
+    delete:
+      tags: 
+      - Client
+      summary: Delete a client by CF.
+      parameters:
+        - name: cfcliente
+          in: path
+          description: CF (Codice Fiscale) of the client to be deleted.
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 255
+      responses:
+        '200':
+          description: The client has been deleted successfully.
+  /updatecliente/{cfcliente}:
+    put:
+      tags: 
+      - Client
+      summary: Update a client by CF.
+      parameters:
+        - name: cfcliente
+          in: path
+          description: CF (Codice Fiscale) of the client to be updated.
+          required: true
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 255
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Client'
+      responses:
+        '200':
+          description: The client has been updated successfully.
+  /createroute:
+    post:
+      tags: 
+      - Route
+      summary: Create a new route.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Route'
+      responses:
+        '201':
+          description: The route has been created successfully.
+          content:
+            application/json:
+              schema:
+                type: string
+  /getroute/{codroute}:
+    parameters:
+      - name: codroute
+        in: path
+        description: Code of the route to retrieve.
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 1
+    get:
+      tags: 
+      - Route
+      summary: Retrieve a route by code.
+      responses:
+        '200':
+          description: A JSON array containing the route object.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Route'
+  /delroute/{codroute}:
+    delete:
+      tags: 
+      - Route
+      summary: Delete a route by code.
+      parameters:
+        - name: codroute
+          in: path
+          description: Code of the route to be deleted.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':
+          description: The route has been deleted successfully.
+  /updateroute/{codroute}:
+    put:
+      tags: 
+      - Route
+      summary: Update a route by code.
+      parameters:
+        - name: codroute
+          in: path
+          description: Code of the route to be updated.
+          required: true
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Route'
+      responses:
+        '200':
+          description: The route has been updated successfully.
+          
+  /getreservation/{cfcliente}:
+    parameters:
+      - name: cfcliente
+        in: path
+        description: Code of the route to retrieve.
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 255
+    get:
+      tags: 
+      - Reservation
+      summary: Retrieve a reservaation by client code.
+      responses:
+        '200':
+          description: A JSON array containing the route object.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+  
+  /login/{username}/{password}:
+    get:
+      tags: 
+      - AccountClient
+      summary: Login user
+      description: Authenticate the user using username and password
+      parameters:
+        - in: path
+          name: username
+          required: true
+          description: User's username
+          schema:
+            type: string
+        - in: path
+          name: password
+          required: true
+          description: User's password
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Indicates if the login was successful
+                  message:
+                    type: string
+                    description: Response message
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '404':
+          description: Account not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error description
+  
+components:
+  schemas:
+    Crociera:
+      type: object
+      required:
+        - id_crociera
+        - data_inizio
+        - data_fine
+        - durata_crociera
+        - tema_crociera
+        - id_nave
+        - localita
+      properties:
+        id_crociera:
+          type: integer
+          format: int64
+          example: 1
+          description: Unique ID of the cruise
+        data_inizio:
+          type: string
+          format: date
+          example: '2024-04-01'
+          description: Start date of the cruise
+        data_fine:
+          type: string
+          format: date
+          example: '2024-04-07'
+          description: End date of the cruise
+        durata_crociera:
+          type: integer
+          example: 7
+          description: Duration of the cruise in days
+        tema_crociera:
+          type: string
+          example: "Avventura nei Caraibi"
+          description: Theme of the cruise
+        id_nave:
+          type: integer
+          format: int64
+          example: 1234
+          description: ID of the ship associated with the cruise
+        img:
+          type: string
+          format: url
+          example: "https://example.com/image.jpg"
+          description: URL of the cruise image
+        localita:
+          type: string
+          example: "Caraibi"
+          description: Location of the cruise destination
+
+    Boat:
+      type: object
+      required:
+        - id_nave
+        - tipologia
+        - n_cabine
+      properties:
+        id_nave:
+          type: integer
+          format: int64
+          example: 1234
+          description: Unique ID of the ship
+        tipologia:
+          type: string
+          example: "Premium"
+          description: Type of the ship
+        n_cabine:
+          type: integer
+          example: 100
+          description: Number of cabins in the ship
+
+    Client:
+      type: object
+      required:
+        - cf_cliente
+        - nome_cliente
+        - cognome_cliente
+        - email_cliente
+        - telefono_cliente
+      properties:
+        cf_cliente:
+          type: string
+          example: "ABCD1234567890"
+          description: Fiscal code of the customer
+        nome_cliente:
+          type: string
+          example: "Mario"
+          description: First name of the customer
+        cognome_cliente:
+          type: string
+          example: "Rossi"
+          description: Last name of the customer
+        email_cliente:
+          type: string
+          format: email
+          example: "mario@example.com"
+          description: Email address of the customer
+        telefono_cliente:
+          type: string
+          example: "+1234567890"
+          description: Phone number of the customer
+    Route:
+      type: object
+      required:
+        - id_nave
+        - codice_percorso
+        - data_ora
+        - città
+      properties:
+        id_nave:
+          type: integer
+          format: int64
+          example: 1234
+          description: ID of the ship associated with the route
+        codice_percorso:
+          type: string
+          example: "ABC123"
+          description: Code of the route
+        data_ora:
+          type: integer
+          format: int64
+          example: 1648854000
+          description: Date and time of the route
+        città:
+          type: string
+          example: "Roma"
+          description: City of the route destination
+
+    Reservation:
+      type: object
+      required:
+        - cf_cliente
+        - id_crociera
+      properties:
+        cf_cliente:
+          type: string
+          example: "ABCD1234567890"
+          description: Fiscal code of the customer making the reservation
+        id_crociera:
+          type: integer
+          format: int64
+          example: 1
+          description: ID of the reserved cruise
+        data_prenotazione:
+          type: string
+          format: date
+          example: '2024-04-01'
+          description: Date of the reservation
+
+    AccountClient:
+      type: object
+      required: 
+        - username
+        - password
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Unique ID of the customer
+          example: 123
+        username:
+          type: string
+          description: Username of the customer
+          example: example_username
+        password:
+          type: string
+          description: Password of the customer
+          example: example_password
+        cf_cliente:
+          type: string
+          description: Fiscal code of the customer
+          example: ABCDEF01G23H456I
+        dipendente:
+          type: boolean
+          description: Indicates if the customer is also an employee of the company
+          example: false
